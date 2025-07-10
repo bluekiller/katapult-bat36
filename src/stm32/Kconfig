@@ -329,7 +329,10 @@ config STM32F0_TRIM
 
 choice
     prompt "Communication interface"
-    config STM32_USB_PA11_PA12
+    config STM32_CAN_AND_USB
+        bool "CAN bus (on PB8/PB9) or USB (on PA11/PA12)" if MACH_STM32F1
+        select USBORCANSERIAL
+    config STM32_MMENU_USB_PA11_PA12
         bool "USB (on PA11/PA12)" if HAVE_STM32_USBFS || HAVE_STM32_USBOTG
         select USBSERIAL
     config STM32_USB_PA11_PA12_REMAP
@@ -452,10 +455,12 @@ choice
         depends on HAVE_STM32_FDCANBUS
 endchoice
 
-
+config STM32_USB_PA11_PA12
+    bool
+    default y if STM32_MMENU_USB_PA11_PA12 || STM32_CAN_AND_USB
 config STM32_CANBUS_PB8_PB9
     bool
-    default y if STM32_MMENU_CANBUS_PB8_PB9 || STM32_CMENU_CANBUS_PB8_PB9
+    default y if STM32_MMENU_CANBUS_PB8_PB9 || STM32_CMENU_CANBUS_PB8_PB9 || STM32_CAN_AND_USB
 config STM32_CANBUS_PI9_PH13
     bool
     default y if STM32_MMENU_CANBUS_PI9_PH13 || STM32_CMENU_CANBUS_PI9_PH13

@@ -434,6 +434,11 @@ usb_init(void)
     USB->DADDR = 0;
     USB->CNTR = USB_CNTR_RESETM;
     USB->ISTR = 0;
+    #ifndef CONFIG_STM32_CAN_AND_USB
     armcm_enable_irq(USB_IRQHandler, USBx_IRQn, 1);
+    #endif
 }
+
+#ifndef CONFIG_STM32_CAN_AND_USB
 DECL_INIT(usb_init);
+#endif

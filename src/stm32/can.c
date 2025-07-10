@@ -17,39 +17,39 @@
 #include "sched.h" // DECL_INIT
 
 #if CONFIG_STM32_CANBUS_PA11_PA12 || CONFIG_STM32_CANBUS_PA11_PA12_REMAP
- DECL_CONSTANT_STR("RESERVE_PINS_CAN", "PA11,PA12");
- #define GPIO_Rx GPIO('A', 11)
- #define GPIO_Tx GPIO('A', 12)
+DECL_CONSTANT_STR("RESERVE_PINS_CAN", "PA11,PA12");
+#define GPIO_Rx GPIO('A', 11)
+#define GPIO_Tx GPIO('A', 12)
 #endif
 #if CONFIG_STM32_CANBUS_PB8_PB9
- DECL_CONSTANT_STR("RESERVE_PINS_CAN", "PB8,PB9");
- #define GPIO_Rx GPIO('B', 8)
- #define GPIO_Tx GPIO('B', 9)
+DECL_CONSTANT_STR("RESERVE_PINS_CAN", "PB8,PB9");
+#define GPIO_Rx GPIO('B', 8)
+#define GPIO_Tx GPIO('B', 9)
 #endif
 #if CONFIG_STM32_CANBUS_PI9_PH13
- DECL_CONSTANT_STR("RESERVE_PINS_CAN", "PI9,PH13");
- #define GPIO_Rx GPIO('I', 9)
- #define GPIO_Tx GPIO('H', 13)
+DECL_CONSTANT_STR("RESERVE_PINS_CAN", "PI9,PH13");
+#define GPIO_Rx GPIO('I', 9)
+#define GPIO_Tx GPIO('H', 13)
 #endif
 #if CONFIG_STM32_CANBUS_PB5_PB6
- DECL_CONSTANT_STR("RESERVE_PINS_CAN", "PB5,PB6");
- #define GPIO_Rx GPIO('B', 5)
- #define GPIO_Tx GPIO('B', 6)
+DECL_CONSTANT_STR("RESERVE_PINS_CAN", "PB5,PB6");
+#define GPIO_Rx GPIO('B', 5)
+#define GPIO_Tx GPIO('B', 6)
 #endif
 #if CONFIG_STM32_CANBUS_PB12_PB13
- DECL_CONSTANT_STR("RESERVE_PINS_CAN", "PB12,PB13");
- #define GPIO_Rx GPIO('B', 12)
- #define GPIO_Tx GPIO('B', 13)
+DECL_CONSTANT_STR("RESERVE_PINS_CAN", "PB12,PB13");
+#define GPIO_Rx GPIO('B', 12)
+#define GPIO_Tx GPIO('B', 13)
 #endif
 #if CONFIG_STM32_CANBUS_PD0_PD1
- DECL_CONSTANT_STR("RESERVE_PINS_CAN", "PD0,PD1");
- #define GPIO_Rx GPIO('D', 0)
- #define GPIO_Tx GPIO('D', 1)
+DECL_CONSTANT_STR("RESERVE_PINS_CAN", "PD0,PD1");
+#define GPIO_Rx GPIO('D', 0)
+#define GPIO_Tx GPIO('D', 1)
 #endif
 
 #if CONFIG_MACH_STM32F0
- #define SOC_CAN CAN
- #define FILTER_CAN CAN
+#define SOC_CAN CAN
+#define FILTER_CAN CAN
  #define CAN_RX0_IRQn  CEC_CAN_IRQn
  #define CAN_RX1_IRQn  CEC_CAN_IRQn
  #define CAN_TX_IRQn   CEC_CAN_IRQn
@@ -58,8 +58,8 @@
 #endif
 
 #if CONFIG_MACH_STM32F1
- #define SOC_CAN CAN1
- #define FILTER_CAN CAN1
+#define SOC_CAN CAN1
+#define FILTER_CAN CAN1
  #define CAN_RX0_IRQn  CAN1_RX0_IRQn
  #define CAN_RX1_IRQn  CAN1_RX1_IRQn
  #define CAN_TX_IRQn   CAN1_TX_IRQn
@@ -70,28 +70,28 @@
 #if CONFIG_MACH_STM32F4
  #if (CONFIG_STM32_CANBUS_PA11_PA12 || CONFIG_STM32_CANBUS_PB8_PB9 \
      || CONFIG_STM32_CANBUS_PD0_PD1 || CONFIG_STM32_CANBUS_PI9_PH13)
-  #define SOC_CAN CAN1
-  #define FILTER_CAN CAN1
+#define SOC_CAN CAN1
+#define FILTER_CAN CAN1
   #define CAN_RX0_IRQn  CAN1_RX0_IRQn
   #define CAN_RX1_IRQn  CAN1_RX1_IRQn
   #define CAN_TX_IRQn   CAN1_TX_IRQn
   #define CAN_SCE_IRQn  CAN1_SCE_IRQn
- #elif CONFIG_STM32_CANBUS_PB5_PB6 || CONFIG_STM32_CANBUS_PB12_PB13
-  #define SOC_CAN CAN2
-  #define FILTER_CAN CAN1
+#elif CONFIG_STM32_CANBUS_PB5_PB6 || CONFIG_STM32_CANBUS_PB12_PB13
+#define SOC_CAN CAN2
+#define FILTER_CAN CAN1
   #define CAN_RX0_IRQn  CAN2_RX0_IRQn
   #define CAN_RX1_IRQn  CAN2_RX1_IRQn
   #define CAN_TX_IRQn   CAN2_TX_IRQn
   #define CAN_SCE_IRQn  CAN2_SCE_IRQn
- #else
-  #error Uknown pins for STMF32F4 CAN
- #endif
+#else
+#error Uknown pins for STMF32F4 CAN
+#endif
 
  #define CAN_FUNCTION  GPIO_FUNCTION(9) // Alternative function mapping number
 #endif
 
 #ifndef SOC_CAN
- #error No known CAN device for configured MCU
+#error No known CAN device for configured MCU
 #endif
 
 // Transmit a packet
@@ -284,11 +284,15 @@ can_init(void)
     canhw_set_filter(0);
 
     /*##-3- Configure Interrupts #################################*/
+    #ifndef CONFIG_STM32_CAN_AND_USB
     armcm_enable_irq(CAN_IRQHandler, CAN_RX0_IRQn, 0);
     if (CAN_RX0_IRQn != CAN_RX1_IRQn)
         armcm_enable_irq(CAN_IRQHandler, CAN_RX1_IRQn, 0);
     if (CAN_RX0_IRQn != CAN_TX_IRQn)
         armcm_enable_irq(CAN_IRQHandler, CAN_TX_IRQn, 0);
+    #endif
     SOC_CAN->IER = CAN_IER_FMPIE0;
 }
+#ifndef CONFIG_STM32_CAN_AND_USB
 DECL_INIT(can_init);
+#endif

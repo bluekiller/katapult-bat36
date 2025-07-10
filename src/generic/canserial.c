@@ -15,6 +15,7 @@
 #include "command.h" // DECL_CONSTANT
 #include "fasthash.h" // fasthash64
 #include "sched.h" // sched_wake_task
+#include "autoconf.h" // CONFIG_STM32_CAN_AND_USB
 
 #define CANBUS_UUID_LEN 6
 
@@ -75,7 +76,10 @@ canserial_tx_task(void)
     }
     CanData.transmit_pos = tpos;
 }
+
+#ifndef CONFIG_STM32_CAN_AND_USB
 DECL_TASK(canserial_tx_task);
+#endif
 
 // Encode and transmit a "response" message
 void
@@ -310,7 +314,9 @@ canserial_rx_task(void)
             command_send_ack();
     }
 }
+#ifndef CONFIG_STM32_CAN_AND_USB
 DECL_TASK(canserial_rx_task);
+#endif
 
 
 /****************************************************************
@@ -339,4 +345,6 @@ canserial_shutdown(void)
     canserial_notify_tx();
     canserial_notify_rx();
 }
+#ifndef CONFIG_STM32_CAN_AND_USB
 DECL_SHUTDOWN(canserial_shutdown);
+#endif

@@ -59,7 +59,9 @@ usb_bulk_in_task(void)
     }
     transmit_pos = needcopy;
 }
+#ifndef CONFIG_STM32_CAN_AND_USB
 DECL_TASK(usb_bulk_in_task);
+#endif
 
 // Encode and transmit a "response" message
 void
@@ -124,7 +126,9 @@ usb_bulk_out_task(void)
     }
     receive_pos = rpos;
 }
+#ifndef CONFIG_STM32_CAN_AND_USB
 DECL_TASK(usb_bulk_out_task);
+#endif
 
 
 /****************************************************************
@@ -520,7 +524,9 @@ usb_ep0_task(void)
     else
         usb_state_ready();
 }
+#ifndef CONFIG_STM32_CAN_AND_USB
 DECL_TASK(usb_ep0_task);
+#endif
 
 void
 usb_shutdown(void)
@@ -529,4 +535,6 @@ usb_shutdown(void)
     usb_notify_bulk_out();
     usb_notify_ep0();
 }
+#ifndef CONFIG_STM32_CAN_AND_USB
 DECL_SHUTDOWN(usb_shutdown);
+#endif
