@@ -5,6 +5,7 @@
 #include "comm_select.h"
 #include "internal.h"         // GPIO
 #include "board/armcm_boot.h" // armcm_enable_irq
+#include "board/misc.h" // console_sendf
 
 // Selection pin (configure via CONFIG_BUTTON_PIN or hardcode)
 #define COMM_SELECT_PIN GPIO('C', 14) // Change as needed
@@ -98,6 +99,20 @@ void comm_select_run_shutdownfuncs(void)
     }
 }
 DECL_SHUTDOWN(comm_select_run_shutdownfuncs);
+
+void console_sendf(const struct command_encoder *ce, va_list args)
+{
+    if (use_usb)
+    {
+        extern void console_sendf_usb(const struct command_encoder *ce, va_list args);
+        console_sendf_usb(ce, args);
+    }
+    else
+    {
+        extern void console_sendf_can(const struct command_encoder *ce, va_list args);
+        console_sendf_can(ce, args);
+    }
+}
 
 // Optional: function to query current selection
 int comm_use_usb(void)

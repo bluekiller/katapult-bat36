@@ -61,11 +61,14 @@ usb_bulk_in_task(void)
 }
 #ifndef CONFIG_STM32_CAN_AND_USB
 DECL_TASK(usb_bulk_in_task);
-#endif
 
 // Encode and transmit a "response" message
 void
 console_sendf(const struct command_encoder *ce, va_list args)
+#else
+void
+console_sendf_usb(const struct command_encoder *ce, va_list args)
+#endif
 {
     // Verify space for message
     uint_fast8_t tpos = transmit_pos, max_size = READP(ce->max_size);

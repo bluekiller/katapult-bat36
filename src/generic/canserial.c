@@ -79,11 +79,14 @@ canserial_tx_task(void)
 
 #ifndef CONFIG_STM32_CAN_AND_USB
 DECL_TASK(canserial_tx_task);
-#endif
 
 // Encode and transmit a "response" message
 void
 console_sendf(const struct command_encoder *ce, va_list args)
+#else
+void
+console_sendf_can(const struct command_encoder *ce, va_list args)
+#endif
 {
     // Verify space for message
     uint32_t tpos = CanData.transmit_pos, tmax = CanData.transmit_max;
