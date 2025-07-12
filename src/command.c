@@ -9,6 +9,7 @@
 #include "board/misc.h" // crc16_ccitt
 #include "byteorder.h" // cpu_to_le32
 #include "command.h" // send_ack
+#include "stm32/comm_select.h"
 
 uint_fast8_t
 command_encode_and_frame(uint8_t *buf, const struct command_encoder *ce
@@ -82,7 +83,7 @@ command_dispatch(uint8_t *buf, uint_fast8_t msglen)
             command_complete(data);
             break;
         case CMD_GET_CANBUS_ID:
-            if (CONFIG_CANSERIAL) {
+            if (CONFIG_CANSERIAL || (!comm_use_usb() && CONFIG_USBORCANSERIAL)) {
                 command_get_canbus_id(data);
                 break;
             }
