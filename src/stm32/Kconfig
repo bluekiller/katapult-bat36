@@ -332,8 +332,6 @@ choice
     config STM32_CAN_AND_USB
         bool "CAN bus (on PB8/PB9) or USB (on PA11/PA12)" if MACH_STM32F1
         select USBORCANSERIAL
-        select USBSERIAL
-        select CANSERIAL
     config STM32_MMENU_USB_PA11_PA12
         bool "USB (on PA11/PA12)" if HAVE_STM32_USBFS || HAVE_STM32_USBOTG
         select USBSERIAL
