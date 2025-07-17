@@ -83,10 +83,14 @@ command_dispatch(uint8_t *buf, uint_fast8_t msglen)
             command_complete(data);
             break;
         case CMD_GET_CANBUS_ID:
-            if (CONFIG_CANSERIAL || (!comm_use_usb() && CONFIG_USBORCANSERIAL)) {
+            #if CONFIG_CANSERIAL || CONFIG_USBORCANSERIAL
+            if (!comm_use_usb()) {
                 command_get_canbus_id(data);
                 break;
             }
+            #else
+                break;
+            #endif
             // NO BREAK
         default:
             // Unknown command or gabage data, NACK it
