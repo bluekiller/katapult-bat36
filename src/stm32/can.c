@@ -284,7 +284,7 @@ can_init(void)
     canhw_set_filter(0);
 
     /*##-3- Configure Interrupts #################################*/
-    #ifndef CONFIG_STM32_CAN_AND_USB
+    #if !CONFIG_STM32_CAN_AND_USB
     armcm_enable_irq(CAN_IRQHandler, CAN_RX0_IRQn, 0);
     if (CAN_RX0_IRQn != CAN_RX1_IRQn)
         armcm_enable_irq(CAN_IRQHandler, CAN_RX1_IRQn, 0);
@@ -293,6 +293,6 @@ can_init(void)
     #endif
     SOC_CAN->IER = CAN_IER_FMPIE0;
 }
-#ifndef CONFIG_STM32_CAN_AND_USB
+#if !CONFIG_STM32_CAN_AND_USB
 DECL_INIT(can_init);
 #endif

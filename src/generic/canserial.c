@@ -77,7 +77,7 @@ canserial_tx_task(void)
     CanData.transmit_pos = tpos;
 }
 
-#ifndef CONFIG_STM32_CAN_AND_USB
+#if !CONFIG_STM32_CAN_AND_USB
 DECL_TASK(canserial_tx_task);
 
 // Encode and transmit a "response" message
@@ -317,7 +317,7 @@ canserial_rx_task(void)
             command_send_ack();
     }
 }
-#ifndef CONFIG_STM32_CAN_AND_USB
+#if !CONFIG_STM32_CAN_AND_USB
 DECL_TASK(canserial_rx_task);
 #endif
 
@@ -348,6 +348,6 @@ canserial_shutdown(void)
     canserial_notify_tx();
     canserial_notify_rx();
 }
-#ifndef CONFIG_STM32_CAN_AND_USB
+#if !CONFIG_STM32_CAN_AND_USB
 DECL_SHUTDOWN(canserial_shutdown);
 #endif
