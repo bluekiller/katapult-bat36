@@ -51,14 +51,17 @@ void comm_select_init(void)
     if (use_usb)
     {
         usb_init();
+        // Only enable the shared USB/CAN IRQ (IRQ 20)
+        armcm_enable_irq(USB_OR_CAN_IRQHandler, 20, 1);
     }
     else
     {
         can_init();
+        // Enable all CAN IRQs: IRQ 19 (CAN TX), IRQ 20 (CAN RX0), IRQ 21 (CAN RX1)
+        armcm_enable_irq(USB_OR_CAN_IRQHandler, 20, 1);
+        armcm_enable_irq(Default_OR_CAN_IRQHandler, 19, 1);
+        armcm_enable_irq(Default_OR_CAN_IRQHandler, 21, 1);
     }
-    armcm_enable_irq(USB_OR_CAN_IRQHandler, 20, 1);
-    armcm_enable_irq(Default_OR_CAN_IRQHandler, 19, 1);
-    armcm_enable_irq(Default_OR_CAN_IRQHandler, 21, 1);
 }
 
 DECL_INIT(comm_select_init);
